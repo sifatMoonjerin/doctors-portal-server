@@ -33,6 +33,7 @@ app.post("/addServices", (req, res) => {
 
 app.post("/bookAppointment", (req, res) => {
   const appointmentDetails = req.body;
+  appointmentDetails.bookingDate = new Date();
   client = new MongoClient(uri, { useNewUrlParser: true });
   client.connect((error) => {
     const collection = client.db("doctorsPortal").collection("appointments");
