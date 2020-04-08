@@ -30,6 +30,26 @@ app.post("/addServices", (req, res) => {
     });
 });
 
+
+app.post("/bookAppointment", (req, res) => {
+  const appointmentDetails = req.body;
+  client = new MongoClient(uri, { useNewUrlParser: true });
+  client.connect((error) => {
+    const collection = client.db("doctorsPortal").collection("appointments");
+    collection.insertOne(appointmentDetails, (err, result) => {
+      if (err) {
+        console.log(err);
+        console.log(error)
+        res.status(500).send({ message: err });
+      } else {
+        res.send(result.ops[0]);
+      }
+    });
+    client.close();
+  });
+});
+
+
 app.get("/services", (req, res) => {
   client = new MongoClient(uri, { useNewUrlParser: true });
   client.connect((error) => {
