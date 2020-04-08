@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const MongoClient = require("mongodb").MongoClient;
+const ObjectId = require("mongodb").ObjectId;
 require("dotenv").config();
 
 const app = express();
@@ -45,6 +46,23 @@ app.post("/bookAppointment", (req, res) => {
       } else {
         res.send(result.ops[0]);
       }
+    });
+    client.close();
+  });
+});
+
+
+app.put("/dailyAppointment/updateVisit", (req, res) => {
+  const id = req.body.id
+  client = new MongoClient(uri, { useNewUrlParser: true });
+  client.connect((error) => {
+    const collection = client.db("doctorsPortal").collection("appointments");
+    collection.updateOne({_id:ObjectId(id)}, {$set: {visited:true}}, (err, result) => {
+      if (err) {
+        console.log(err);
+        console.log(error)
+        res.status(500).send({ message: err });
+      } 
     });
     client.close();
   });
