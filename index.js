@@ -69,6 +69,23 @@ app.put("/dailyAppointment/updateVisit", (req, res) => {
 });
 
 
+app.put("/updatePrescription", (req, res) => {
+  const id = req.body.id
+  client = new MongoClient(uri, { useNewUrlParser: true });
+  client.connect((error) => {
+    const collection = client.db("doctorsPortal").collection("appointments");
+    collection.updateOne({_id:ObjectId(id)}, {$set: {prescription:req.body.prescription}}, (err, result) => {
+      if (err) {
+        console.log(err);
+        console.log(error)
+        res.status(500).send({ message: err });
+      } 
+    });
+    client.close();
+  });
+});
+
+
 app.get("/dailyAppointment/:appointmentDate", (req, res) => {
   client = new MongoClient(uri, { useNewUrlParser: true });
   client.connect((error) => {
