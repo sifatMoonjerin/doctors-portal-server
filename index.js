@@ -86,6 +86,23 @@ app.get("/dailyAppointment/:appointmentDate", (req, res) => {
   });
 });
 
+app.get("/allAppointments", (req, res) => {
+  client = new MongoClient(uri, { useNewUrlParser: true });
+  client.connect((error) => {
+    const collection = client.db("doctorsPortal").collection("appointments");
+    collection.find().toArray((err, documents) => {
+      if (err) {
+        console.log(err);
+        console.log(error)
+        res.status(500).send({ message: err });
+      } else {
+        res.send(documents);
+      }
+    });
+    client.close();
+  });
+});
+
 
 app.get("/services", (req, res) => {
   client = new MongoClient(uri, { useNewUrlParser: true });
